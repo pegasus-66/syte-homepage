@@ -1,0 +1,22 @@
+{
+  "name": "syte-homepage",
+  "version": "1.0.0",
+  "description": "Homepage for Syte foiling A-catamaran",
+  "main": "index.js",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "keywords": [
+    "foiling",
+    "catamaran",
+    "sailing",
+    "syte"
+  ],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "vite": "^5.0.0"
+  }
+}
