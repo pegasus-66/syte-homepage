@@ -1,11 +1,11 @@
 version: 1
 frontend:
   phases:
-    build:
+    preBuild:
       commands:
-        - echo "No build required for static HTML"
+        - echo "Static site - no build needed"
   artifacts:
-    baseDirectory: /
+    baseDirectory: .
     files:
       - '**/*'
   cache:
