@@ -1,0 +1,992 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SYTE - Racing Spirit</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --electric-blue: #0080FF;
+            --neon-green: #39FF14;
+            --black: #000000;
+            --white: #FFFFFF;
+            --gray: #1A1A1A;
+        }
+
+        body {
+            font-family: -apple-system, 'Helvetica Neue', sans-serif;
+            background: var(--black);
+            color: var(--white);
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Velocity Lines Background */
+        .velocity-lines {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+            opacity: 0.1;
+        }
+
+        .velocity-line {
+            position: absolute;
+            height: 1px;
+            background: linear-gradient(90deg, transparent 0%, var(--neon-green) 50%, transparent 100%);
+            animation: velocityMove 3s linear infinite;
+        }
+
+        .velocity-line:nth-child(1) { top: 10%; width: 60%; animation-duration: 2s; }
+        .velocity-line:nth-child(2) { top: 30%; width: 80%; animation-duration: 2.5s; left: -20%; }
+        .velocity-line:nth-child(3) { top: 50%; width: 70%; animation-duration: 3s; }
+        .velocity-line:nth-child(4) { top: 70%; width: 90%; animation-duration: 2.8s; left: -10%; }
+        .velocity-line:nth-child(5) { top: 90%; width: 75%; animation-duration: 2.2s; }
+
+        @keyframes velocityMove {
+            from {
+                transform: translateX(-100%);
+            }
+            to {
+                transform: translateX(200%);
+            }
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 30px 60px;
+            z-index: 1000;
+            background: transparent;
+            transition: all 0.3s ease;
+        }
+
+        nav.scrolled {
+            background: rgba(0, 0, 0, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 20px 60px;
+        }
+
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 32px;
+            font-weight: 900;
+            letter-spacing: 2px;
+            background: linear-gradient(135deg, var(--electric-blue) 0%, var(--neon-green) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 40px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--white);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            letter-spacing: 1px;
+            position: relative;
+            transition: all 0.3s;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--electric-blue) 0%, var(--neon-green) 100%);
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover::after,
+        .nav-links a.active::after {
+            width: 100%;
+        }
+
+        /* Hero Section */
+        .hero {
+            position: relative;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .video-background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: -3;
+            filter: brightness(0.6);
+        }
+
+        /* Diagonal Color Blocks */
+        .diagonal-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
+            overflow: hidden;
+        }
+
+        .diagonal-block-1 {
+            position: absolute;
+            width: 150%;
+            height: 60%;
+            background: linear-gradient(135deg, var(--electric-blue) 0%, transparent 100%);
+            transform: rotate(-15deg) translateX(-20%);
+            top: -20%;
+            opacity: 0.3;
+            animation: slideBlock1 20s ease-in-out infinite;
+        }
+
+        .diagonal-block-2 {
+            position: absolute;
+            width: 150%;
+            height: 60%;
+            background: linear-gradient(135deg, transparent 0%, var(--neon-green) 100%);
+            transform: rotate(-15deg) translateX(20%);
+            bottom: -20%;
+            right: -50%;
+            opacity: 0.3;
+            animation: slideBlock2 20s ease-in-out infinite;
+        }
+
+        @keyframes slideBlock1 {
+            0%, 100% { transform: rotate(-15deg) translateX(-20%); }
+            50% { transform: rotate(-15deg) translateX(-10%); }
+        }
+
+        @keyframes slideBlock2 {
+            0%, 100% { transform: rotate(-15deg) translateX(20%); }
+            50% { transform: rotate(-15deg) translateX(10%); }
+        }
+
+        .hero-content {
+            text-align: center;
+            z-index: 1;
+        }
+
+        .hero h1 {
+            font-size: clamp(60px, 12vw, 140px);
+            font-weight: 100;
+            font-style: italic;
+            letter-spacing: -4px;
+            margin-bottom: 20px;
+            line-height: 0.9;
+            position: relative;
+        }
+
+        .hero h1 .word {
+            display: inline-block;
+            animation: wordSlide 1s ease-out backwards;
+        }
+
+        .hero h1 .word:nth-child(1) { animation-delay: 0.2s; }
+        .hero h1 .word:nth-child(2) { animation-delay: 0.4s; }
+        .hero h1 .word:nth-child(3) { animation-delay: 0.6s; }
+
+        @keyframes wordSlide {
+            from {
+                transform: translateX(-100px) skewX(-10deg);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0) skewX(0);
+                opacity: 1;
+            }
+        }
+
+        .hero .subtitle {
+            font-size: 18px;
+            font-weight: 300;
+            letter-spacing: 6px;
+            opacity: 0.8;
+            margin-bottom: 60px;
+            text-transform: uppercase;
+            animation: fadeInUp 1s ease-out 0.8s backwards;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Gradient CTA Button */
+        .cta-button {
+            display: inline-block;
+            padding: 20px 60px;
+            background: linear-gradient(135deg, var(--electric-blue) 0%, var(--neon-green) 100%);
+            color: var(--white);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            animation: fadeInUp 1s ease-out 1s backwards, borderPulse 2s ease-in-out infinite;
+        }
+
+        @keyframes borderPulse {
+            0%, 100% {
+                box-shadow: 0 0 0 0 rgba(57, 255, 20, 0);
+            }
+            50% {
+                box-shadow: 0 0 30px 10px rgba(57, 255, 20, 0.3);
+            }
+        }
+
+        .cta-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--neon-green) 0%, var(--electric-blue) 100%);
+            transition: left 0.5s ease;
+        }
+
+        .cta-button:hover::before {
+            left: 0;
+        }
+
+        .cta-button span {
+            position: relative;
+            z-index: 1;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 10px 40px rgba(0, 128, 255, 0.5);
+        }
+
+        /* Magazine Style Value Props */
+        .values-section {
+            padding: 150px 0;
+            position: relative;
+            background: linear-gradient(180deg, var(--black) 0%, var(--gray) 100%);
+        }
+
+        .value-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 40px;
+            position: relative;
+        }
+
+        .value-item {
+            margin-bottom: 200px;
+            position: relative;
+        }
+
+        /* Magazine Layout Variations */
+        .value-item:nth-child(1) .value-content {
+            display: grid;
+            grid-template-columns: 1.5fr 1fr;
+            gap: -100px;
+            align-items: center;
+        }
+
+        .value-item:nth-child(2) .value-content {
+            display: grid;
+            grid-template-columns: 1fr 1.5fr;
+            gap: -100px;
+            align-items: center;
+        }
+
+        .value-item:nth-child(3) .value-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: center;
+        }
+
+        .value-image-wrapper {
+            position: relative;
+            overflow: visible;
+        }
+
+        .value-image {
+            position: relative;
+            height: 500px;
+            overflow: hidden;
+            transform: rotate(0deg);
+            transition: all 0.6s ease;
+        }
+
+        .value-item:nth-child(1) .value-image {
+            transform: rotate(-5deg);
+            margin-top: 50px;
+        }
+
+        .value-item:nth-child(2) .value-image {
+            transform: rotate(5deg);
+            margin-top: -50px;
+            z-index: 2;
+        }
+
+        .value-item:nth-child(3) .value-image {
+            transform: rotate(-3deg);
+        }
+
+        .value-image:hover {
+            transform: rotate(0deg) scale(1.05);
+        }
+
+        .value-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: contrast(1.2) brightness(0.9);
+            transition: all 0.6s ease;
+        }
+
+        .value-image:hover img {
+            filter: contrast(1.3) brightness(1);
+            transform: scale(1.1);
+        }
+
+        .image-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg,
+                rgba(0, 128, 255, 0.3) 0%,
+                transparent 50%,
+                rgba(57, 255, 20, 0.3) 100%);
+            mix-blend-mode: multiply;
+        }
+
+        .value-text {
+            position: relative;
+            z-index: 3;
+            padding: 40px;
+        }
+
+        .value-item:nth-child(2) .value-text {
+            margin-left: -100px;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+        }
+
+        .value-number {
+            font-size: 200px;
+            font-weight: 900;
+            font-style: italic;
+            background: linear-gradient(135deg, var(--electric-blue) 0%, var(--neon-green) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 0.8;
+            margin-bottom: 30px;
+            opacity: 0.3;
+        }
+
+        .value-heading {
+            font-size: 56px;
+            font-weight: 300;
+            font-style: italic;
+            letter-spacing: -2px;
+            margin-bottom: 30px;
+            line-height: 0.9;
+        }
+
+        .value-heading span {
+            color: var(--neon-green);
+            font-weight: 900;
+        }
+
+        .value-description {
+            font-size: 16px;
+            line-height: 1.8;
+            opacity: 0.8;
+            font-weight: 300;
+            max-width: 500px;
+        }
+
+        /* Performance Metrics Animation */
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .metric-item {
+            text-align: left;
+        }
+
+        .metric-chart {
+            width: 60px;
+            height: 60px;
+            position: relative;
+            margin-bottom: 15px;
+        }
+
+        .metric-circle {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+            transform: rotate(-90deg);
+        }
+
+        .metric-fill {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: 2px solid var(--neon-green);
+            border-top-color: transparent;
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            animation: fillCircle 2s ease-out forwards;
+        }
+
+        @keyframes fillCircle {
+            from {
+                transform: rotate(0deg);
+            }
+            to {
+                transform: rotate(270deg);
+            }
+        }
+
+        .metric-label {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            opacity: 0.6;
+        }
+
+        .metric-value {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--neon-green);
+        }
+
+        /* Diagonal Section Transitions */
+        .diagonal-transition {
+            position: absolute;
+            width: 100%;
+            height: 150px;
+            bottom: -75px;
+            left: 0;
+            background: linear-gradient(135deg, transparent 49%, var(--gray) 50%);
+            z-index: 1;
+        }
+
+        /* Footer CTA */
+        .footer-cta {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            background: var(--gray);
+            overflow: hidden;
+        }
+
+        .footer-cta::before {
+            content: '';
+            position: absolute;
+            width: 200%;
+            height: 200%;
+            background: repeating-linear-gradient(
+                45deg,
+                transparent,
+                transparent 10px,
+                rgba(57, 255, 20, 0.05) 10px,
+                rgba(57, 255, 20, 0.05) 20px
+            );
+            animation: diagonalMove 10s linear infinite;
+        }
+
+        @keyframes diagonalMove {
+            from {
+                transform: translate(-50%, -50%);
+            }
+            to {
+                transform: translate(0, 0);
+            }
+        }
+
+        .footer-cta h2 {
+            font-size: 80px;
+            font-weight: 900;
+            font-style: italic;
+            letter-spacing: -3px;
+            margin-bottom: 50px;
+            text-align: center;
+            line-height: 0.9;
+        }
+
+        .footer-cta h2 .line1 {
+            display: block;
+            animation: slideInLeft 1s ease-out;
+        }
+
+        .footer-cta h2 .line2 {
+            display: block;
+            color: var(--neon-green);
+            animation: slideInRight 1s ease-out 0.2s backwards;
+        }
+
+        @keyframes slideInLeft {
+            from {
+                transform: translateX(-100px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideInRight {
+            from {
+                transform: translateX(100px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        /* Scroll Reveal Animations */
+        .scroll-reveal {
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all 0.8s ease;
+        }
+
+        .scroll-reveal.revealed {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+
+            .hero h1 {
+                font-size: 60px;
+            }
+
+            .value-item .value-content {
+                grid-template-columns: 1fr !important;
+                gap: 40px !important;
+            }
+
+            .value-text {
+                margin-left: 0 !important;
+                padding: 20px;
+            }
+
+            .value-number {
+                font-size: 100px;
+            }
+
+            .value-heading {
+                font-size: 36px;
+            }
+
+            .metrics-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Velocity Lines -->
+    <div class="velocity-lines">
+        <div class="velocity-line"></div>
+        <div class="velocity-line"></div>
+        <div class="velocity-line"></div>
+        <div class="velocity-line"></div>
+        <div class="velocity-line"></div>
+    </div>
+
+    <!-- Navigation -->
+    <nav id="navbar">
+        <div class="nav-container">
+            <div class="logo">SYTE</div>
+            <ul class="nav-links">
+                <li><a href="#hero" class="active">LAUNCH</a></li>
+                <li><a href="#values">VELOCITY</a></li>
+                <li><a href="#performance">PERFORMANCE</a></li>
+                <li><a href="#cta">RESERVE</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero" id="hero">
+        <video class="video-background" autoplay muted loop>
+            <source src="https://assets.mixkit.co/videos/preview/mixkit-blue-ocean-waves-1583-large.mp4" type="video/mp4">
+        </video>
+
+        <div class="diagonal-overlay">
+            <div class="diagonal-block-1"></div>
+            <div class="diagonal-block-2"></div>
+        </div>
+
+        <div class="hero-content">
+            <h1>
+                <span class="word">REDEFINE</span>
+                <span class="word">SPEED</span><br>
+                <span class="word">ON WATER</span>
+            </h1>
+            <p class="subtitle">The Future of Foiling Has Arrived</p>
+            <a href="#cta" class="cta-button">
+                <span>JOIN EXCLUSIVE WAITING LIST</span>
+            </a>
+        </div>
+    </section>
+
+    <!-- Value Props Magazine Style -->
+    <section class="values-section" id="values">
+        <div class="value-container">
+            <!-- Value 1: Performance -->
+            <div class="value-item scroll-reveal">
+                <div class="value-content">
+                    <div class="value-text">
+                        <div class="value-number">01</div>
+                        <h2 class="value-heading">
+                            PURE<br>
+                            <span>VELOCITY</span>
+                        </h2>
+                        <p class="value-description">
+                            Breaking the laws of physics on water. Our revolutionary foiling system
+                            delivers speeds that challenge aviation, with the grace of a bird and
+                            the precision of a Formula 1 machine.
+                        </p>
+                        <div class="metrics-grid">
+                            <div class="metric-item">
+                                <div class="metric-chart">
+                                    <div class="metric-circle">
+                                        <div class="metric-fill"></div>
+                                    </div>
+                                </div>
+                                <div class="metric-value">50+</div>
+                                <div class="metric-label">Knots</div>
+                            </div>
+                            <div class="metric-item">
+                                <div class="metric-chart">
+                                    <div class="metric-circle">
+                                        <div class="metric-fill"></div>
+                                    </div>
+                                </div>
+                                <div class="metric-value">0.3G</div>
+                                <div class="metric-label">Force</div>
+                            </div>
+                            <div class="metric-item">
+                                <div class="metric-chart">
+                                    <div class="metric-circle">
+                                        <div class="metric-fill"></div>
+                                    </div>
+                                </div>
+                                <div class="metric-value">1.2s</div>
+                                <div class="metric-label">Launch</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="value-image-wrapper">
+                        <div class="value-image">
+                            <img src="https://images.unsplash.com/photo-1559827291-72ee739d0d9a?w=1200&h=800&fit=crop" alt="Performance">
+                            <div class="image-overlay"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Value 2: Innovation -->
+            <div class="value-item scroll-reveal">
+                <div class="value-content">
+                    <div class="value-image-wrapper">
+                        <div class="value-image">
+                            <img src="https://images.unsplash.com/photo-1530587191325-3db32d826c18?w=1200&h=800&fit=crop" alt="Innovation">
+                            <div class="image-overlay"></div>
+                        </div>
+                    </div>
+                    <div class="value-text">
+                        <div class="value-number">02</div>
+                        <h2 class="value-heading">
+                            RADICAL<br>
+                            <span>INNOVATION</span>
+                        </h2>
+                        <p class="value-description">
+                            Where aerospace meets hydrodynamics. Autonomous flight control,
+                            real-time stabilization, and predictive navigation systems that
+                            anticipate the ocean before you do.
+                        </p>
+                        <div class="metrics-grid">
+                            <div class="metric-item">
+                                <div class="metric-chart">
+                                    <div class="metric-circle">
+                                        <div class="metric-fill"></div>
+                                    </div>
+                                </div>
+                                <div class="metric-value">AI</div>
+                                <div class="metric-label">Powered</div>
+                            </div>
+                            <div class="metric-item">
+                                <div class="metric-chart">
+                                    <div class="metric-circle">
+                                        <div class="metric-fill"></div>
+                                    </div>
+                                </div>
+                                <div class="metric-value">5ms</div>
+                                <div class="metric-label">Response</div>
+                            </div>
+                            <div class="metric-item">
+                                <div class="metric-chart">
+                                    <div class="metric-circle">
+                                        <div class="metric-fill"></div>
+                                    </div>
+                                </div>
+                                <div class="metric-value">360°</div>
+                                <div class="metric-label">Control</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="diagonal-transition"></div>
+            </div>
+
+            <!-- Value 3: Experience -->
+            <div class="value-item scroll-reveal" id="performance">
+                <div class="value-content">
+                    <div class="value-text">
+                        <div class="value-number">03</div>
+                        <h2 class="value-heading">
+                            ULTIMATE<br>
+                            <span>FREEDOM</span>
+                        </h2>
+                        <p class="value-description">
+                            Experience the impossible. Silent flight above water, zero emissions,
+                            infinite horizons. This is not just sailing; this is transcendence.
+                        </p>
+                        <div class="metrics-grid">
+                            <div class="metric-item">
+                                <div class="metric-chart">
+                                    <div class="metric-circle">
+                                        <div class="metric-fill"></div>
+                                    </div>
+                                </div>
+                                <div class="metric-value">∞</div>
+                                <div class="metric-label">Range</div>
+                            </div>
+                            <div class="metric-item">
+                                <div class="metric-chart">
+                                    <div class="metric-circle">
+                                        <div class="metric-fill"></div>
+                                    </div>
+                                </div>
+                                <div class="metric-value">0</div>
+                                <div class="metric-label">Emissions</div>
+                            </div>
+                            <div class="metric-item">
+                                <div class="metric-chart">
+                                    <div class="metric-circle">
+                                        <div class="metric-fill"></div>
+                                    </div>
+                                </div>
+                                <div class="metric-value">100%</div>
+                                <div class="metric-label">Thrill</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="value-image-wrapper">
+                        <div class="value-image">
+                            <img src="https://images.unsplash.com/photo-1502680390469-be75c86b636f?w=1200&h=800&fit=crop" alt="Experience">
+                            <div class="image-overlay"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer CTA -->
+    <section class="footer-cta" id="cta">
+        <h2>
+            <span class="line1">CLAIM YOUR</span>
+            <span class="line2">FUTURE NOW</span>
+        </h2>
+        <a href="#" class="cta-button">
+            <span>SECURE YOUR POSITION</span>
+        </a>
+    </section>
+
+    <script>
+        // Navbar scroll effect
+        window.addEventListener('scroll', () => {
+            const navbar = document.getElementById('navbar');
+            if (window.scrollY > 100) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+
+            // Update active nav link
+            const sections = document.querySelectorAll('section');
+            const navLinks = document.querySelectorAll('.nav-links a');
+
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.clientHeight;
+
+                if (window.scrollY >= (sectionTop - 200)) {
+                    navLinks.forEach(link => {
+                        link.classList.remove('active');
+                        if (section.getAttribute('id') === link.getAttribute('href').substring(1)) {
+                            link.classList.add('active');
+                        }
+                    });
+                }
+            });
+        });
+
+        // Scroll Reveal Animation
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -100px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('revealed');
+
+                    // Trigger metric animations
+                    const metrics = entry.target.querySelectorAll('.metric-fill');
+                    metrics.forEach((metric, index) => {
+                        metric.style.animationDelay = `${index * 0.2}s`;
+                    });
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.scroll-reveal').forEach(el => {
+            observer.observe(el);
+        });
+
+        // Parallax on scroll
+        window.addEventListener('scroll', () => {
+            const scrolled = window.scrollY;
+
+            // Parallax for diagonal blocks
+            const block1 = document.querySelector('.diagonal-block-1');
+            const block2 = document.querySelector('.diagonal-block-2');
+
+            if (block1 && block2) {
+                block1.style.transform = `rotate(-15deg) translateX(${-20 + scrolled * 0.02}%)`;
+                block2.style.transform = `rotate(-15deg) translateX(${20 - scrolled * 0.02}%)`;
+            }
+
+            // Parallax for images
+            const images = document.querySelectorAll('.value-image img');
+            images.forEach((img, index) => {
+                const speed = 0.05 * (index + 1);
+                img.style.transform = `scale(1.1) translateY(${scrolled * speed}px)`;
+            });
+        });
+
+        // Dynamic velocity lines
+        const velocityLines = document.querySelector('.velocity-lines');
+
+        window.addEventListener('scroll', () => {
+            const scrollSpeed = Math.abs(window.scrollY - (window.lastScrollY || 0));
+            window.lastScrollY = window.scrollY;
+
+            if (scrollSpeed > 10) {
+                velocityLines.style.opacity = '0.3';
+            } else {
+                velocityLines.style.opacity = '0.1';
+            }
+        });
+
+        // Add hover effect to value images
+        const valueImages = document.querySelectorAll('.value-image');
+
+        valueImages.forEach(image => {
+            image.addEventListener('mouseenter', () => {
+                image.style.transform = 'rotate(0deg) scale(1.05)';
+            });
+
+            image.addEventListener('mouseleave', () => {
+                const parent = image.closest('.value-item');
+                const index = Array.from(parent.parentNode.children).indexOf(parent);
+
+                if (index === 0) {
+                    image.style.transform = 'rotate(-5deg)';
+                } else if (index === 1) {
+                    image.style.transform = 'rotate(5deg)';
+                } else {
+                    image.style.transform = 'rotate(-3deg)';
+                }
+            });
+        });
+
+        // Kinetic typography on hero
+        const heroWords = document.querySelectorAll('.hero h1 .word');
+
+        setInterval(() => {
+            heroWords.forEach((word, index) => {
+                setTimeout(() => {
+                    word.style.transform = 'scale(1.05)';
+                    setTimeout(() => {
+                        word.style.transform = 'scale(1)';
+                    }, 200);
+                }, index * 100);
+            });
+        }, 5000);
+    </script>
+</body>
+</html>

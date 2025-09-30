@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SYTE Homepage Variants</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, 'Helvetica Neue', sans-serif;
+            background: linear-gradient(135deg, #0A0A0A 0%, #1A1A1A 100%);
+            color: white;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+        }
+
+        h1 {
+            font-size: 48px;
+            font-weight: 100;
+            letter-spacing: 8px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .subtitle {
+            font-size: 18px;
+            opacity: 0.7;
+            margin-bottom: 60px;
+            text-align: center;
+            letter-spacing: 2px;
+        }
+
+        .variants-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 40px;
+            max-width: 1200px;
+            width: 100%;
+        }
+
+        .variant-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 40px;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .variant-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.1) 50%, transparent 100%);
+            transition: left 0.6s ease;
+        }
+
+        .variant-card:hover::before {
+            left: 100%;
+        }
+
+        .variant-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(255, 255, 255, 0.3);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+        }
+
+        .variant-number {
+            font-size: 72px;
+            font-weight: 100;
+            opacity: 0.2;
+            margin-bottom: 20px;
+        }
+
+        .variant-title {
+            font-size: 28px;
+            font-weight: 300;
+            margin-bottom: 15px;
+            letter-spacing: 2px;
+        }
+
+        .variant-description {
+            font-size: 14px;
+            line-height: 1.6;
+            opacity: 0.7;
+            margin-bottom: 30px;
+        }
+
+        .variant-features {
+            list-style: none;
+            font-size: 13px;
+            opacity: 0.6;
+        }
+
+        .variant-features li {
+            padding: 5px 0;
+            position: relative;
+            padding-left: 20px;
+        }
+
+        .variant-features li::before {
+            content: '→';
+            position: absolute;
+            left: 0;
+        }
+
+        .view-button {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 12px 30px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            font-size: 12px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            transition: all 0.3s ease;
+        }
+
+        .variant-card:hover .view-button {
+            background: white;
+            color: black;
+        }
+
+        /* Color accents for each variant */
+        .variant-card:nth-child(1) .variant-number {
+            color: #0066CC;
+        }
+
+        .variant-card:nth-child(2) .variant-number {
+            color: #00D4FF;
+        }
+
+        .variant-card:nth-child(3) .variant-number {
+            background: linear-gradient(135deg, #0080FF 0%, #39FF14 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 32px;
+            }
+
+            .variants-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>SYTE HOMEPAGE</h1>
+    <p class="subtitle">Choose Your Design Direction</p>
+
+    <div class="variants-grid">
+        <a href="variant1-stealth.html" class="variant-card">
+            <div class="variant-number">01</div>
+            <h2 class="variant-title">STEALTH LUXURY</h2>
+            <p class="variant-description">
+                Dark, sophisticated minimalism with ultra-light typography and smooth parallax effects.
+                Perfect for conveying exclusivity and refined elegance.
+            </p>
+            <ul class="variant-features">
+                <li>Minimal transparent navigation</li>
+                <li>Ultra-thin typography</li>
+                <li>Subtle parallax scrolling</li>
+                <li>Progress indicator dots</li>
+                <li>Ocean blue accents</li>
+            </ul>
+            <span class="view-button">View Variant</span>
+        </a>
+
+        <a href="variant2-technical.html" class="variant-card">
+            <div class="variant-number">02</div>
+            <h2 class="variant-title">TECHNICAL PRECISION</h2>
+            <p class="variant-description">
+                Bold geometric design with data visualizations and technical specs.
+                Emphasizes innovation and cutting-edge technology.
+            </p>
+            <ul class="variant-features">
+                <li>Hamburger menu with fullscreen overlay</li>
+                <li>Bold geometric typography</li>
+                <li>Data visualizations & metrics</li>
+                <li>Duotone image effects</li>
+                <li>Custom cursor & interactions</li>
+            </ul>
+            <span class="view-button">View Variant</span>
+        </a>
+
+        <a href="variant3-racing.html" class="variant-card">
+            <div class="variant-number">03</div>
+            <h2 class="variant-title">RACING SPIRIT</h2>
+            <p class="variant-description">
+                Energetic design with vibrant colors and dynamic animations.
+                Captures the thrill and speed of high-performance sailing.
+            </p>
+            <ul class="variant-features">
+                <li>Gradient color scheme</li>
+                <li>Kinetic typography</li>
+                <li>Magazine-style layouts</li>
+                <li>Velocity line animations</li>
+                <li>Diagonal transitions</li>
+            </ul>
+            <span class="view-button">View Variant</span>
+        </a>
+    </div>
+</body>
+</html>

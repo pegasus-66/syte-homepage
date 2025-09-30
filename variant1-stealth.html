@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SYTE - Stealth Luxury</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --black: #0A0A0A;
+            --charcoal: #1A1A1A;
+            --silver: #C0C0C0;
+            --ocean-blue: #0066CC;
+            --white: #FFFFFF;
+        }
+
+        body {
+            font-family: -apple-system, 'Helvetica Neue', sans-serif;
+            font-weight: 100;
+            background: var(--black);
+            color: var(--white);
+            overflow-x: hidden;
+        }
+
+        /* Smooth Scrolling */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 30px 60px;
+            z-index: 1000;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            mix-blend-mode: difference;
+        }
+
+        nav.scrolled {
+            background: rgba(10, 10, 10, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 20px 60px;
+        }
+
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 24px;
+            letter-spacing: 8px;
+            font-weight: 100;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 40px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--white);
+            text-decoration: none;
+            font-size: 13px;
+            letter-spacing: 2px;
+            transition: opacity 0.3s;
+            opacity: 0.8;
+        }
+
+        .nav-links a:hover {
+            opacity: 1;
+        }
+
+        /* Progress Dots */
+        .progress-dots {
+            position: fixed;
+            right: 40px;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 100;
+        }
+
+        .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            margin: 20px 0;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .dot.active {
+            background: var(--ocean-blue);
+            border-color: var(--ocean-blue);
+            transform: scale(1.5);
+        }
+
+        /* Hero Section */
+        .hero {
+            position: relative;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .video-background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: -2;
+        }
+
+        .video-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(10, 10, 10, 0.6);
+            z-index: -1;
+        }
+
+        .hero-content {
+            text-align: center;
+            z-index: 1;
+            opacity: 0;
+            animation: fadeInUp 1.5s ease forwards;
+            animation-delay: 0.5s;
+        }
+
+        .hero h1 {
+            font-size: clamp(48px, 7vw, 96px);
+            font-weight: 100;
+            letter-spacing: 12px;
+            margin-bottom: 20px;
+            line-height: 1.1;
+        }
+
+        .hero .subtitle {
+            font-size: 18px;
+            letter-spacing: 4px;
+            opacity: 0.7;
+            margin-bottom: 60px;
+            font-weight: 200;
+        }
+
+        /* CTA Button */
+        .cta-button {
+            display: inline-block;
+            padding: 18px 50px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            background: transparent;
+            color: var(--white);
+            text-decoration: none;
+            font-size: 14px;
+            letter-spacing: 3px;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            animation: subtlePulse 3s infinite;
+        }
+
+        .cta-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: var(--ocean-blue);
+            transition: left 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: -1;
+        }
+
+        .cta-button:hover {
+            border-color: var(--ocean-blue);
+            transform: translateY(-2px);
+        }
+
+        .cta-button:hover::before {
+            left: 0;
+        }
+
+        /* Value Props Sections */
+        .value-section {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .value-content {
+            width: 100%;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 60px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 100px;
+            align-items: center;
+        }
+
+        .value-section.reverse .value-content {
+            direction: rtl;
+        }
+
+        .value-section.reverse .value-text {
+            direction: ltr;
+        }
+
+        .value-text {
+            opacity: 0;
+            transform: translateX(-50px);
+            transition: all 1s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .value-text.visible {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .value-number {
+            font-size: 120px;
+            font-weight: 100;
+            color: var(--ocean-blue);
+            opacity: 0.2;
+            line-height: 1;
+            margin-bottom: 30px;
+        }
+
+        .value-heading {
+            font-size: 48px;
+            font-weight: 100;
+            letter-spacing: 4px;
+            margin-bottom: 30px;
+        }
+
+        .value-description {
+            font-size: 16px;
+            line-height: 1.8;
+            opacity: 0.7;
+            font-weight: 300;
+            letter-spacing: 1px;
+        }
+
+        .value-image {
+            position: relative;
+            height: 600px;
+            overflow: hidden;
+            opacity: 0;
+            transform: translateX(50px);
+            transition: all 1s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .value-section.reverse .value-image {
+            transform: translateX(-50px);
+        }
+
+        .value-image.visible {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .value-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transform: scale(1.1);
+            transition: transform 3s ease;
+        }
+
+        .value-image.visible img {
+            transform: scale(1);
+        }
+
+        .image-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(10, 10, 10, 0.4), rgba(0, 102, 204, 0.2));
+            pointer-events: none;
+        }
+
+        /* Footer CTA */
+        .footer-cta {
+            height: 60vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(180deg, var(--black), var(--charcoal));
+            position: relative;
+            overflow: hidden;
+        }
+
+        .footer-cta::before {
+            content: '';
+            position: absolute;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(0, 102, 204, 0.1) 0%, transparent 70%);
+            animation: rotate 20s linear infinite;
+        }
+
+        .footer-cta h2 {
+            font-size: 64px;
+            font-weight: 100;
+            letter-spacing: 6px;
+            margin-bottom: 40px;
+            opacity: 0;
+            animation: fadeInUp 1s ease forwards;
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+        }
+
+        @keyframes subtlePulse {
+            0%, 100% {
+                box-shadow: 0 0 0 0 rgba(0, 102, 204, 0);
+            }
+            50% {
+                box-shadow: 0 0 20px 5px rgba(0, 102, 204, 0.3);
+            }
+        }
+
+        @keyframes rotate {
+            from {
+                transform: rotate(0deg);
+            }
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* Parallax Effect */
+        .parallax-wrapper {
+            transform-style: preserve-3d;
+        }
+
+        [data-speed] {
+            transition: transform 0.5s;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+
+            .value-content {
+                grid-template-columns: 1fr;
+                gap: 40px;
+            }
+
+            .value-section.reverse .value-content {
+                direction: ltr;
+            }
+
+            .hero h1 {
+                letter-spacing: 6px;
+            }
+
+            .progress-dots {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav id="navbar">
+        <div class="nav-container">
+            <div class="logo">SYTE</div>
+            <ul class="nav-links">
+                <li><a href="#hero">HOME</a></li>
+                <li><a href="#performance">PERFORMANCE</a></li>
+                <li><a href="#innovation">INNOVATION</a></li>
+                <li><a href="#experience">EXPERIENCE</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Progress Dots -->
+    <div class="progress-dots">
+        <div class="dot active" data-section="hero"></div>
+        <div class="dot" data-section="performance"></div>
+        <div class="dot" data-section="innovation"></div>
+        <div class="dot" data-section="experience"></div>
+    </div>
+
+    <!-- Hero Section -->
+    <section class="hero" id="hero">
+        <video class="video-background" autoplay muted loop>
+            <source src="https://assets.mixkit.co/videos/preview/mixkit-blue-ocean-waves-1583-large.mp4" type="video/mp4">
+        </video>
+        <div class="video-overlay"></div>
+        <div class="hero-content">
+            <h1>REDEFINE SPEED<br>ON WATER</h1>
+            <p class="subtitle">The Future of Foiling Has Arrived</p>
+            <a href="#cta" class="cta-button">JOIN EXCLUSIVE WAITING LIST</a>
+        </div>
+    </section>
+
+    <!-- Value Prop 1: Performance -->
+    <section class="value-section" id="performance">
+        <div class="value-content">
+            <div class="value-text">
+                <div class="value-number">01</div>
+                <h2 class="value-heading">UNMATCHED<br>PERFORMANCE</h2>
+                <p class="value-description">
+                    Experience the pinnacle of hydrofoil engineering. Our cutting-edge design delivers
+                    unprecedented speed and stability, allowing you to glide above the water at velocities
+                    previously thought impossible. Advanced computational fluid dynamics and aerospace-grade
+                    materials combine to create a sailing experience that transcends traditional boundaries.
+                </p>
+            </div>
+            <div class="value-image" data-speed="0.15">
+                <img src="https://images.unsplash.com/photo-1569163139394-de4798aa62b6?w=1200&h=800&fit=crop" alt="Performance">
+                <div class="image-overlay"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Value Prop 2: Innovation -->
+    <section class="value-section reverse" id="innovation">
+        <div class="value-content">
+            <div class="value-text">
+                <div class="value-number">02</div>
+                <h2 class="value-heading">REVOLUTIONARY<br>INNOVATION</h2>
+                <p class="value-description">
+                    Built with tomorrow's technology today. Our autonomous flight control system,
+                    predictive stability algorithms, and smart foil adjustment mechanisms represent
+                    a quantum leap in sailing innovation. Every component has been reimagined,
+                    refined, and perfected through thousands of hours of testing and development.
+                </p>
+            </div>
+            <div class="value-image" data-speed="0.15">
+                <img src="https://images.unsplash.com/photo-1540979388789-6cee28a1cdc9?w=1200&h=800&fit=crop" alt="Innovation">
+                <div class="image-overlay"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Value Prop 3: Experience -->
+    <section class="value-section" id="experience">
+        <div class="value-content">
+            <div class="value-text">
+                <div class="value-number">03</div>
+                <h2 class="value-heading">ULTIMATE<br>EXPERIENCE</h2>
+                <p class="value-description">
+                    More than a vessel, it's a transformation of how you connect with the ocean.
+                    Feel the exhilaration of silent flight over water, the freedom of boundless
+                    horizons, and the exclusivity of owning a masterpiece. This is not just sailing;
+                    this is the evolution of human interaction with the sea.
+                </p>
+            </div>
+            <div class="value-image" data-speed="0.15">
+                <img src="https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=1200&h=800&fit=crop" alt="Experience">
+                <div class="image-overlay"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer CTA -->
+    <section class="footer-cta" id="cta">
+        <h2>BE AMONG THE FIRST</h2>
+        <a href="#" class="cta-button">SECURE YOUR POSITION</a>
+    </section>
+
+    <script>
+        // Navbar scroll effect
+        window.addEventListener('scroll', () => {
+            const navbar = document.getElementById('navbar');
+            if (window.scrollY > 100) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+
+            // Update progress dots
+            const sections = ['hero', 'performance', 'innovation', 'experience'];
+            const dots = document.querySelectorAll('.dot');
+
+            sections.forEach((section, index) => {
+                const element = document.getElementById(section);
+                const rect = element.getBoundingClientRect();
+
+                if (rect.top <= window.innerHeight / 2 && rect.bottom >= window.innerHeight / 2) {
+                    dots.forEach(dot => dot.classList.remove('active'));
+                    dots[index].classList.add('active');
+                }
+            });
+
+            // Parallax effect - only apply to elements in viewport
+            const parallaxElements = document.querySelectorAll('[data-speed]');
+            parallaxElements.forEach(element => {
+                const rect = element.getBoundingClientRect();
+                const isInViewport = rect.top < window.innerHeight && rect.bottom > 0;
+
+                if (isInViewport) {
+                    const speed = element.dataset.speed;
+                    const elementTop = element.offsetTop;
+                    const scrolled = window.scrollY;
+                    const yPos = -(scrolled - elementTop) * speed * 0.5;
+                    element.style.transform = `translateY(${yPos}px)`;
+                }
+            });
+        });
+
+        // Intersection Observer for fade-in animations
+        const observerOptions = {
+            threshold: 0.2,
+            rootMargin: '0px 0px -100px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.value-text, .value-image').forEach(el => {
+            observer.observe(el);
+        });
+
+        // Progress dots navigation
+        document.querySelectorAll('.dot').forEach((dot, index) => {
+            dot.addEventListener('click', () => {
+                const sections = ['hero', 'performance', 'innovation', 'experience'];
+                document.getElementById(sections[index]).scrollIntoView({ behavior: 'smooth' });
+            });
+        });
+
+        // Smooth parallax on mouse move (hero section only)
+        const hero = document.querySelector('.hero');
+        hero.addEventListener('mousemove', (e) => {
+            const x = (e.clientX / window.innerWidth - 0.5) * 20;
+            const y = (e.clientY / window.innerHeight - 0.5) * 20;
+
+            const heroContent = document.querySelector('.hero-content');
+            heroContent.style.transform = `translate(${x}px, ${y}px)`;
+        });
+    </script>
+</body>
+</html>
